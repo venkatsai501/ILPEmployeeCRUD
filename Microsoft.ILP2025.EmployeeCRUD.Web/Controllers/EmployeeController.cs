@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ILP2025.EmployeeCRUD.Repositores;
 using Microsoft.ILP2025.EmployeeCRUD.Servcies;
+using Microsoft.ILP2025.EmployeeCRUD.Entities;
 
 namespace Microsoft.ILP2025.EmployeeCRUD.Web.Controllers
 {
@@ -26,6 +27,47 @@ namespace Microsoft.ILP2025.EmployeeCRUD.Web.Controllers
         {
             var employee = await this.employeeService.GetEmployee(id);
             return View(employee);
-        }      
+        }   
+
+        public IActionResult Create(EmployeeEntity emp)
+        {
+            if (ModelState.IsValid)
+            {
+                employeeService.Create(emp);
+                return RedirectToAction("Index");
+            }
+            return View(emp);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var emp = await employeeService.GetEmployee(id); 
+            if (emp == null)
+            {
+                return NotFound(); 
+            }
+            return View(emp); 
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EmployeeEntity emp)
+        {
+
+            if (ModelState.IsValid)
+            {
+                employeeService.Edit(emp);
+                return RedirectToAction("Index");
+            }
+            return View(emp);
+        }
+
+        public IActionResult Delete(EmployeeEntity emp)
+        {
+            
+            employeeService.Delete(emp);
+            return View(emp);
+        } 
     }
 }
